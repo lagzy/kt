@@ -1,1 +1,528 @@
-
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kreis Trainer 🎯 – Vorbereitung auf den Kreis-Test</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/manrope@latest/index.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/manrope@latest/700.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/manrope@latest/800.css">
+<style>
+:root{
+  --bg:#0b1020; --card:#141a30; --card2:#1a2240; --line:#2a3356;
+  --txt:#e9edff; --mut:#9aa6d4; --acc:#5eead4; --acc2:#818cf8;
+  --ok:#34d399; --bad:#f87171; --warn:#fbbf24;
+}
+*{box-sizing:border-box; margin:0; padding:0}
+body{
+  font-family:'Manrope',system-ui,sans-serif; color:var(--txt); min-height:100vh;
+  background:
+    radial-gradient(900px 500px at 85% -10%, rgba(129,140,248,.22), transparent 60%),
+    radial-gradient(700px 420px at -10% 20%, rgba(94,234,212,.14), transparent 60%),
+    var(--bg);
+}
+header{position:sticky; top:0; z-index:50; backdrop-filter:blur(14px); background:rgba(11,16,32,.8); border-bottom:1px solid var(--line);}
+.hwrap{max-width:1020px; margin:0 auto; padding:12px 18px; display:flex; align-items:center; gap:14px; flex-wrap:wrap}
+.brand{font-weight:800; font-size:20px; letter-spacing:.3px}
+.brand span{color:var(--acc)}
+.stats{display:flex; gap:8px; flex-wrap:wrap; margin-left:auto}
+.chip{background:var(--card); border:1px solid var(--line); border-radius:999px; padding:6px 12px; font-size:13px; font-weight:700; white-space:nowrap}
+.chip b{color:var(--acc)}
+.chip.pulse{animation:pulse .4s ease}
+nav{display:flex; gap:6px; flex-wrap:wrap}
+.tab{border:1px solid var(--line); background:transparent; color:var(--mut); border-radius:12px; padding:9px 14px; font-weight:700; font-size:14px; cursor:pointer; transition:.2s; font-family:inherit}
+.tab:hover{color:var(--txt); border-color:var(--acc2)}
+.tab.active{background:linear-gradient(135deg,rgba(94,234,212,.18),rgba(129,140,248,.18)); color:var(--txt); border-color:var(--acc)}
+main{max-width:1020px; margin:0 auto; padding:22px 18px 70px}
+.view{animation:pop .35s ease}
+.hidden{display:none}
+@keyframes pop{from{opacity:0; transform:translateY(8px)}to{opacity:1; transform:none}}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.18)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.card{background:var(--card); border:1px solid var(--line); border-radius:18px; padding:22px; margin-bottom:16px}
+.card h2{font-size:22px; margin-bottom:6px}
+.card h3{font-size:16px; margin:14px 0 6px}
+.mut{color:var(--mut); font-size:14.5px; line-height:1.55}
+.formula{background:linear-gradient(135deg,rgba(94,234,212,.12),rgba(129,140,248,.14)); border:1px solid rgba(94,234,212,.4); border-radius:14px; padding:12px 16px; font-size:19px; font-weight:800; margin:10px 0; letter-spacing:.3px}
+.formula small{font-size:12px; color:var(--mut); font-weight:600; display:block; margin-top:2px}
+.warnbox{background:rgba(251,191,36,.1); border:1px solid rgba(251,191,36,.4); border-radius:12px; padding:10px 14px; font-size:14px; margin:10px 0}
+.okbox{background:rgba(52,211,153,.12); border:1px solid rgba(52,211,153,.45); border-radius:12px; padding:10px 14px; font-size:14.5px; margin:10px 0; font-weight:700}
+.badbox{background:rgba(248,113,113,.12); border:1px solid rgba(248,113,113,.45); border-radius:12px; padding:10px 14px; font-size:14.5px; margin:10px 0; font-weight:700}
+.btn{background:linear-gradient(135deg,#34d399,#22d3ee); color:#04121f; border:none; border-radius:12px; padding:12px 20px; font-weight:800; font-size:15px; cursor:pointer; transition:.2s; font-family:inherit}
+.btn:hover{transform:translateY(-2px); filter:brightness(1.08)}
+.btn.ghost{background:transparent; border:1px solid var(--line); color:var(--txt)}
+.btn.ghost:hover{border-color:var(--acc)}
+.btn:disabled{opacity:.45; cursor:not-allowed; transform:none}
+.viz{display:flex; gap:18px; flex-wrap:wrap; align-items:center; margin:12px 0}
+.viz svg{background:var(--card2); border:1px solid var(--line); border-radius:14px; flex:1 1 300px; max-width:420px}
+.vctl{flex:1 1 220px}
+.vctl input[type=range]{width:100%; accent-color:var(--acc)}
+.vctl select{background:#0d1330; border:1px solid var(--line); border-radius:10px; color:var(--txt); padding:8px 10px; font-weight:700; font-family:inherit}
+.vout{margin-top:10px; font-size:16px; font-weight:700; line-height:1.7}
+.vout b{color:var(--acc)}
+input[type=number], .ans{background:#0d1330; border:1px solid var(--line); border-radius:10px; color:var(--txt); padding:10px 12px; font-size:16px; font-weight:700; width:130px; font-family:inherit; outline:none}
+.ans:focus{border-color:var(--acc)}
+.ans.ok{border-color:var(--ok); background:rgba(52,211,153,.14)}
+.ans.bad{border-color:var(--bad); background:rgba(248,113,113,.12); animation:shake .3s}
+.field{display:flex; align-items:center; gap:8px; font-weight:800; font-size:16px}
+.field .unit{color:var(--mut); font-size:13px; font-weight:600}
+.fields{display:flex; gap:18px; flex-wrap:wrap; margin:14px 0}
+.pbtns{display:flex; gap:10px; flex-wrap:wrap; margin-top:6px}
+.steps{margin-top:14px; background:var(--card2); border:1px solid var(--line); border-radius:14px; padding:16px 18px}
+.steps ol{margin-left:20px; line-height:1.9; font-size:15px}
+.steps b{color:var(--acc)}
+.tibox{margin-top:10px; background:rgba(129,140,248,.12); border:1px dashed var(--acc2); border-radius:12px; padding:10px 14px; font-size:13.5px; line-height:1.8}
+kbd{background:#0d1330; border:1px solid var(--line); border-bottom-width:3px; border-radius:6px; padding:1px 7px; font-family:inherit; font-size:12px; font-weight:800}
+.dots{display:flex; gap:8px; margin:10px 0 4px; flex-wrap:wrap}
+.dot{width:14px; height:14px; border-radius:50%; border:2px solid var(--line); cursor:pointer; transition:.2s}
+.dot.done{background:var(--ok); border-color:var(--ok)}
+.dot.cur{border-color:var(--acc); transform:scale(1.2)}
+.lnav{display:flex; justify-content:space-between; align-items:center; margin-top:14px; gap:10px}
+.given{font-size:18px; font-weight:800; margin:8px 0 2px; color:var(--warn)}
+.ptitle{font-size:17px; font-weight:800; line-height:1.4}
+.grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:14px}
+table{width:100%; border-collapse:collapse; font-size:14.5px; margin-top:8px}
+th,td{border:1px solid var(--line); padding:8px 10px; text-align:left}
+th{background:var(--card2)}
+.timer{font-variant-numeric:tabular-nums; color:var(--warn); font-weight:800}
+.review li{margin:8px 0 8px 20px; line-height:1.6; font-size:14.5px}
+.banner{background:linear-gradient(135deg,rgba(251,191,36,.14),rgba(248,113,113,.14)); border:1px solid rgba(251,191,36,.4); border-radius:16px; padding:14px 18px; margin-bottom:16px; font-size:14.5px; line-height:1.6}
+footer{text-align:center; color:var(--mut); font-size:13px; padding:20px}
+@media(max-width:640px){ .stats{margin-left:0} .formula{font-size:16px} }
+</style>
+</head>
+<body>
+<header>
+  <div class="hwrap">
+    <div class="brand">🐛 Kreis<span>Trainer</span></div>
+    <nav>
+      <button class="tab active" data-v="learn">📚 Theorie</button>
+      <button class="tab" data-v="train">🏋️ Trainer</button>
+      <button class="tab" data-v="test">📝 Mini-Test</button>
+      <button class="tab" data-v="cheat">📌 Spickzettel</button>
+    </nav>
+    <div class="stats">
+      <span class="chip" id="stXp">⭐ <b>0</b> XP</span>
+      <span class="chip" id="stStreak">🔥 <b>0</b></span>
+      <span class="chip" id="stSolved">✅ <b>0</b></span>
+      <span class="chip" id="stAcc">🎯 <b>—</b></span>
+    </div>
+  </div>
+</header>
+<main>
+  <section id="view-learn" class="view"></section>
+  <section id="view-train" class="view hidden"></section>
+  <section id="view-test" class="view hidden"></section>
+  <section id="view-cheat" class="view hidden"></section>
+</main>
+<footer>Du schaffst das! 🍀 Plan für heute Abend: Theorie → Trainer → Mini-Test → schlafen.</footer>
+<script>
+"use strict";
+const $=s=>document.querySelector(s);
+const PI=Math.PI;
+function $$(s){ return Array.prototype.slice.call(document.querySelectorAll(s)); }
+function fmt(x,d=2){ const p=Math.pow(10,d); let v=Math.round((x+1e-9)*p)/p; let s=v.toFixed(d); if(s.indexOf('.')>=0) s=s.replace(/0+$/,'').replace(/\.$/,''); return s; }
+function isOk(u,c){ const v=parseFloat(String(u).trim().replace(',','.')); if(isNaN(v)) return false; const tol=Math.max(0.05,Math.abs(c)*0.005); return Math.abs(v-c)<=tol; }
+function ri(a,b){ return a+Math.floor(Math.random()*(b-a+1)); }
+function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); const t=a[i]; a[i]=a[j]; a[j]=t;} return a; }
+const S={xp:0,streak:0,solved:0,checks:0,firstOk:0,lesson:0,mastered:{}};
+try{ const raw=localStorage.getItem('kreisTrainer'); if(raw) Object.assign(S,JSON.parse(raw)); }catch(e){}
+function save(){ try{ localStorage.setItem('kreisTrainer',JSON.stringify(S)); }catch(e){} }
+function bumpXP(n){ S.xp+=n; const c=$('#stXp'); if(c){ c.classList.remove('pulse'); void c.offsetWidth; c.classList.add('pulse'); } refreshStats(); }
+function refreshStats(){
+  $('#stXp').innerHTML='⭐ <b>'+S.xp+'</b> XP';
+  $('#stStreak').innerHTML='🔥 <b>'+S.streak+'</b>';
+  $('#stSolved').innerHTML='✅ <b>'+S.solved+'</b>';
+  $('#stAcc').innerHTML='🎯 <b>'+(S.checks? Math.round(100*S.firstOk/S.checks)+'%':'—')+'</b>';
+  save();
+}
+/* ---------- Aufgabengeneratoren (wie Dossier Kreis + Vortest) ---------- */
+function gen1(){
+  const useR=Math.random()<0.5;
+  const givenR= useR? ri(3,19) : pick([2.5,3,4.5,5.5,7,8.5,9.5]);
+  const U=2*PI*givenR, A=PI*givenR*givenR;
+  return { text:'Berechne den Umfang U und die Fläche A eines Kreises mit:',
+    given: useR? 'r = '+fmt(givenR)+' cm' : 'd = '+fmt(2*givenR)+' cm',
+    fields:[{id:'U',label:'U =',unit:'cm',ans:U},{id:'A',label:'A =',unit:'cm²',ans:A}],
+    steps:(useR?[]:['r = d / 2 = '+fmt(2*givenR)+' / 2 = '+fmt(givenR)+' cm']).concat(['U = 2·π·r = 2·π·'+fmt(givenR)+' = <b>'+fmt(U)+' cm</b>','A = π·r² = π·'+fmt(givenR)+'² = <b>'+fmt(A)+' cm²</b>']),
+    ti:'U: <kbd>2</kbd><kbd>×</kbd><kbd>π</kbd><kbd>×</kbd><kbd>'+fmt(givenR)+'</kbd><kbd>=</kbd> · A: <kbd>π</kbd><kbd>×</kbd><kbd>'+fmt(givenR)+'</kbd><kbd>x²</kbd><kbd>=</kbd>'};
+}
+function gen2(){
+  const r0=pick([4,6,7.5,9,11,13,14.5,17,29.25]);
+  const U=2*PI*r0;
+  return { text:'Berechne den Durchmesser d und den Radius r aus dem Umfang U.',
+    given:'U = '+fmt(U)+' cm',
+    fields:[{id:'d',label:'d =',unit:'cm',ans:2*r0},{id:'r',label:'r =',unit:'cm',ans:r0}],
+    steps:['d = U / π = '+fmt(U)+' / π = <b>'+fmt(2*r0)+' cm</b>','r = d / 2 = <b>'+fmt(r0)+' cm</b>'],
+    ti:'<kbd>'+fmt(U)+'</kbd><kbd>÷</kbd><kbd>π</kbd><kbd>=</kbd> → d; dann <kbd>÷</kbd><kbd>2</kbd> → r'};
+}
+function gen3(){
+  const r0=pick([3,5,8,12,19,24,33]);
+  const A=PI*r0*r0;
+  return { text:'Berechne den Radius r aus der Fläche A.',
+    given:'A = '+fmt(A)+' cm²',
+    fields:[{id:'r',label:'r =',unit:'cm',ans:r0}],
+    steps:['r = √(A / π) = √('+fmt(A)+' / π) = <b>'+fmt(r0)+' cm</b>'],
+    ti:'<kbd>2nd</kbd><kbd>x²</kbd><kbd>(</kbd><kbd>'+fmt(A)+'</kbd><kbd>÷</kbd><kbd>π</kbd><kbd>)</kbd><kbd>=</kbd>'};
+}
+function gen4(){
+  if(Math.random()<0.5){
+    const r0=pick([15,25,35,45,55]); const u=Math.round(2*PI*r0); const A=PI*r0*r0;
+    return { text:'Berechne die Fläche A eines Kreises mit dem Umfang u.',
+      given:'u = '+u+' cm',
+      fields:[{id:'A',label:'A =',unit:'cm²',ans:A}],
+      steps:['r = u / (2π) = '+u+' / (2π) = '+fmt(u/(2*PI))+' cm','A = π·r² = <b>'+fmt(A)+' cm²</b>'],
+      ti:'r: <kbd>'+u+'</kbd><kbd>÷</kbd><kbd>(</kbd><kbd>2</kbd><kbd>×</kbd><kbd>π</kbd><kbd>)</kbd><kbd>=</kbd>, dann A: <kbd>π</kbd><kbd>×</kbd><kbd>Ans</kbd><kbd>x²</kbd><kbd>=</kbd>'};
+  } else {
+    const r0=pick([12,18,29,41]); const A=Math.round(PI*r0*r0); const U=2*PI*r0;
+    return { text:'Berechne den Umfang u eines Kreises mit der Fläche A.',
+      given:'A = '+A+' cm²',
+      fields:[{id:'u',label:'u =',unit:'cm',ans:U}],
+      steps:['r = √(A / π) = √('+A+' / π) = '+fmt(Math.sqrt(A/PI))+' cm','u = 2·π·r = <b>'+fmt(U)+' cm</b>'],
+      ti:'r: <kbd>2nd</kbd><kbd>x²</kbd><kbd>(</kbd><kbd>'+A+'</kbd><kbd>÷</kbd><kbd>π</kbd><kbd>)</kbd><kbd>=</kbd> → u: <kbd>2</kbd><kbd>×</kbd><kbd>π</kbd><kbd>×</kbd><kbd>Ans</kbd><kbd>=</kbd>'};
+  }
+}
+function gen5(){
+  const d=pick([10,12,15,20,24,30]); const r=d/2; const a=pick([36,45,60,72,90,120,138,150,170,210,270]);
+  const b=a/360*2*PI*r, As=a/360*PI*r*r;
+  return { text:'Aus einem Kreis wird ein Kreissektor (Zentriwinkel α) herausgeschnitten. Berechne Sektorfläche und Bogenlänge b.',
+    given:'d = '+d+' cm (r = '+fmt(r)+' cm), α = '+a+'°',
+    fields:[{id:'As',label:'A<sub>S</sub> =',unit:'cm²',ans:As},{id:'b',label:'b =',unit:'cm',ans:b}],
+    steps:['b = (α/360)·2·π·r = ('+a+'/360)·2·π·'+fmt(r)+' = <b>'+fmt(b)+' cm</b>','A<sub>S</sub> = (α/360)·π·r² = ('+a+'/360)·π·'+fmt(r)+'² = <b>'+fmt(As)+' cm²</b>'],
+    ti:'b: <kbd>'+a+'</kbd><kbd>÷</kbd><kbd>360</kbd><kbd>×</kbd><kbd>2</kbd><kbd>×</kbd><kbd>π</kbd><kbd>×</kbd><kbd>'+fmt(r)+'</kbd><kbd>=</kbd>'};
+}
+function gen6(){
+  const r=pick([2.5,3.2,4,5.5]); const n=ri(8,20); const m=pick([1.5,2,2.5]);
+  const U=2*PI*r; const n2=n*m;
+  return { text:'Peter und Marili laufen Runden auf einem Kreis. Welche Strecke haben sie zurückgelegt?',
+    given:'r = '+fmt(r)+' m · Marili: '+n+' Runden · Peter: '+fmt(n2)+' Runden ('+fmt(m)+'× so viele)',
+    fields:[{id:'a',label:'Marili =',unit:'m',ans:n*U},{id:'b',label:'Peter =',unit:'m',ans:n2*U}],
+    steps:['U = 2·π·r = 2·π·'+fmt(r)+' = '+fmt(U)+' m','Marili: '+n+'·U = <b>'+fmt(n*U)+' m</b>','Peter: '+fmt(n2)+'·U = <b>'+fmt(n2*U)+' m</b>'],
+    ti:'U: <kbd>2</kbd><kbd>×</kbd><kbd>π</kbd><kbd>×</kbd><kbd>'+fmt(r)+'</kbd><kbd>=</kbd>, dann <kbd>×</kbd><kbd>'+n+'</kbd><kbd>=</kbd>'};
+}
+function gen7(){
+  const s=pick([8,10,12,16,20]);
+  const U=PI*s, A=PI*(s/2)*(s/2);
+  return { text:'Einem Quadrat mit der Seitenlänge s wird ein Kreis eingeschrieben. Berechne U und A des Kreises.',
+    given:'s = '+s+' cm → d = s, r = '+fmt(s/2)+' cm',
+    fields:[{id:'U',label:'U =',unit:'cm',ans:U},{id:'A',label:'A =',unit:'cm²',ans:A}],
+    steps:['Eingeschriebener Kreis: d = s → r = s/2 = '+fmt(s/2)+' cm','U = π·d = π·'+s+' = <b>'+fmt(U)+' cm</b>','A = π·r² = π·'+fmt(s/2)+'² = <b>'+fmt(A)+' cm²</b>'],
+    ti:'U: <kbd>π</kbd><kbd>×</kbd><kbd>'+s+'</kbd><kbd>=</kbd> · A: <kbd>π</kbd><kbd>×</kbd><kbd>'+fmt(s/2)+'</kbd><kbd>x²</kbd><kbd>=</kbd>'};
+}
+function gen8(){
+  const v=ri(0,3);
+  const r0=pick([6,8,10,12,15,20,44]);
+  if(v===0){ const a=pick([30,45,60,72,90,120,150,210]); const b=a/360*2*PI*r0, As=a/360*PI*r0*r0;
+    return { text:'Sektor-Tabelle: r und α gegeben – berechne Bogenlänge b und Sektorfläche A<sub>S</sub>.',
+      given:'r = '+fmt(r0)+' cm, α = '+a+'°',
+      fields:[{id:'b',label:'b =',unit:'cm',ans:b},{id:'As',label:'A<sub>S</sub> =',unit:'cm²',ans:As}],
+      steps:['b = (α/360)·2πr = ('+a+'/360)·2π·'+r0+' = <b>'+fmt(b)+' cm</b>','A<sub>S</sub> = (α/360)·πr² = <b>'+fmt(As)+' cm²</b> (Kontrolle: ½·b·r)'],
+      ti:'<kbd>'+a+'</kbd><kbd>÷</kbd><kbd>360</kbd><kbd>×</kbd><kbd>2</kbd><kbd>×</kbd><kbd>π</kbd><kbd>×</kbd><kbd>'+r0+'</kbd><kbd>=</kbd>'}; }
+  if(v===1){ const bMax=2*PI*r0*0.85; const b=Math.round(bMax*pick([0.2,0.35,0.5,0.7])*10)/10; const a=b*360/(2*PI*r0); const As=0.5*b*r0;
+    return { text:'Sektor-Tabelle: r und b gegeben – berechne Zentriwinkel α und Sektorfläche A<sub>S</sub>.',
+      given:'r = '+fmt(r0)+' cm, b = '+fmt(b)+' cm',
+      fields:[{id:'a',label:'α =',unit:'°',ans:a},{id:'As',label:'A<sub>S</sub> =',unit:'cm²',ans:As}],
+      steps:['α = (b / (2πr))·360 = ('+fmt(b)+' / (2π·'+r0+'))·360 = <b>'+fmt(a)+'°</b>','A<sub>S</sub> = ½·b·r = ½·'+fmt(b)+'·'+r0+' = <b>'+fmt(As)+' cm²</b>'],
+      ti:'α: <kbd>'+fmt(b)+'</kbd><kbd>÷</kbd><kbd>(</kbd><kbd>2</kbd><kbd>×</kbd><kbd>π</kbd><kbd>×</kbd><kbd>'+r0+'</kbd><kbd>)</kbd><kbd>×</kbd><kbd>360</kbd><kbd>=</kbd>'}; }
+  if(v===2){ const a=pick([36,51,60,72,90,120,170]); const b=pick([10,20,25,30.4,40]); const r=b*360/(2*PI*a); const As=0.5*b*r;
+    return { text:'Sektor-Tabelle: α und b gegeben – berechne Radius r und Sektorfläche A<sub>S</sub>.',
+      given:'α = '+a+'°, b = '+fmt(b)+' cm',
+      fields:[{id:'r',label:'r =',unit:'cm',ans:r},{id:'As',label:'A<sub>S</sub> =',unit:'cm²',ans:As}],
+      steps:['r = (b·360) / (2π·α) = ('+fmt(b)+'·360)/(2π·'+a+') = <b>'+fmt(r)+' cm</b>','A<sub>S</sub> = ½·b·r = <b>'+fmt(As)+' cm²</b>'],
+      ti:'r: <kbd>'+fmt(b)+'</kbd><kbd>×</kbd><kbd>360</kbd><kbd>÷</kbd><kbd>(</kbd><kbd>2</kbd><kbd>×</kbd><kbd>π</kbd><kbd>×</kbd><kbd>'+a+'</kbd><kbd>)</kbd><kbd>=</kbd>'}; }
+  const AsMax=PI*r0*r0*0.85; const As=Math.round(AsMax*pick([0.2,0.4,0.6,0.8])); const a=As*360/(PI*r0*r0); const b=2*As/r0;
+  return { text:'Sektor-Tabelle: r und A<sub>S</sub> gegeben – berechne α und Bogenlänge b.',
+    given:'r = '+fmt(r0)+' cm, A<sub>S</sub> = '+fmt(As)+' cm²',
+    fields:[{id:'a',label:'α =',unit:'°',ans:a},{id:'b',label:'b =',unit:'cm',ans:b}],
+    steps:['α = (A<sub>S</sub> / (πr²))·360 = ('+As+'/(π·'+r0+'²))·360 = <b>'+fmt(a)+'°</b>','b = 2·A<sub>S</sub>/r = 2·'+As+'/'+r0+' = <b>'+fmt(b)+' cm</b>'],
+    ti:'α: <kbd>'+As+'</kbd><kbd>÷</kbd><kbd>(</kbd><kbd>π</kbd><kbd>×</kbd><kbd>'+r0+'</kbd><kbd>x²</kbd><kbd>)</kbd><kbd>×</kbd><kbd>360</kbd><kbd>=</kbd>'};
+}
+function gen9(){
+  const k=pick([1,2,3,4]);
+  const A=9*k*k+0.5*PI*k*k; const U=5.5*PI*k;
+  return { text:'Berechne den Umfang und die Fläche der markierten Figur im Quadrat (wie im Vortest: Viertelkreis, Halbkreise, Dreiviertelkreis).',
+    given:'Quadratseite = '+fmt(3*k)+' cm (links: '+fmt(2*k)+' + '+fmt(k)+', rechts: '+fmt(2*k)+', unten: '+fmt(3*k)+')',
+    fields:[{id:'U',label:'U =',unit:'cm',ans:U},{id:'A',label:'A =',unit:'cm²',ans:A}],
+    steps:['Fläche = Quadrat − Viertel(r='+fmt(2*k)+') − Halb(r='+fmt(k)+') + Halb(r='+fmt(0.5*k)+') + Halb(r='+fmt(1.5*k)+') + ¾·Kreis(r='+fmt(k)+')',
+      'A = '+fmt(9*k*k)+' − '+fmt(0.25*PI*4*k*k)+' − '+fmt(0.5*PI*k*k)+' + '+fmt(0.125*PI*k*k)+' + '+fmt(1.125*PI*k*k)+' + '+fmt(0.75*PI*k*k)+' = <b>'+fmt(A)+' cm²</b>',
+      'U = nur Bögen: ½·2π·'+fmt(0.5*k)+' + ¼·2π·'+fmt(2*k)+' + ¾·2π·'+fmt(k)+' + ½·2π·'+fmt(k)+' + ½·2π·'+fmt(1.5*k)+' = <b>'+fmt(U)+' cm</b>'],
+    ti:'A: <kbd>9</kbd><kbd>×</kbd><kbd>'+k+'</kbd><kbd>x²</kbd><kbd>+</kbd><kbd>0.5</kbd><kbd>×</kbd><kbd>π</kbd><kbd>×</kbd><kbd>'+k+'</kbd><kbd>x²</kbd><kbd>=</kbd> · U: <kbd>5.5</kbd><kbd>×</kbd><kbd>π</kbd><kbd>×</kbd><kbd>'+k+'</kbd><kbd>=</kbd>'};
+}
+function gen10(){
+  const d=pick([24,28,30,32,36]); const R=d/2; const n=pick([4,6,8]); const a=360/n; const t=pick([3,4,5,6]);
+  const A=a/360*PI*(R*R-t*t); const U=2*(R-t)+a/360*2*PI*(R+t);
+  return { text:'Pizza in '+n+' gleich grosse Stücke: Mike nimmt ein Stück und beisst '+t+' cm von der Spitze weg. Berechne Fläche und Umfang des Reststücks (Sektorring). Skizze zuerst!',
+    given:'d = '+d+' cm (R = '+R+' cm), '+n+' Stücke → α = '+a+'°, Biss t = '+t+' cm',
+    fields:[{id:'A',label:'A =',unit:'cm²',ans:A},{id:'U',label:'U =',unit:'cm',ans:U}],
+    steps:['α = 360 / '+n+' = '+a+'°','A = (α/360)·π·(R² − t²) = ('+a+'/360)·π·('+R+'² − '+t+'²) = <b>'+fmt(A)+' cm²</b>','U = 2·(R − t) + (α/360)·2π·(R + t) = '+fmt(2*(R-t))+' + '+fmt(a/360*2*PI*(R+t))+' = <b>'+fmt(U)+' cm</b>'],
+    ti:'A: <kbd>'+a+'</kbd><kbd>÷</kbd><kbd>360</kbd><kbd>×</kbd><kbd>π</kbd><kbd>×</kbd><kbd>(</kbd><kbd>'+R+'</kbd><kbd>x²</kbd><kbd>−</kbd><kbd>'+t+'</kbd><kbd>x²</kbd><kbd>)</kbd><kbd>=</kbd>'};
+}
+const GENS=[gen1,gen2,gen3,gen4,gen5,gen6,gen7,gen8,gen9,gen10];
+/* ---------- 9 Lektionen ---------- */
+const LESSONS=[
+ {t:'Grundlagen: M, r, d',
+  html:'<p class="mut">Ein Kreis hat <b>Mittelpunkt M</b>, <b>Radius r</b> (von M bis zum Rand) und <b>Durchmesser d</b> (durch den ganzen Kreis):</p><div class="formula">d = 2·r &nbsp;&nbsp; r = d / 2</div><p class="mut">Bewege den Slider und beobachte r und d:</p>',
+  viz:1, quiz:{q:'d = 7 cm → r = ? (cm)', ans:3.5}},
+ {t:'Umfang U',
+  html:'<p class="mut"><b>Umfang U</b> = Länge des Kreisrandes («einmal rundherum»):</p><div class="formula">U = 2·π·r = π·d<small>π immer mit der π-Taste, nie 3.14!</small></div><p class="mut">Beispiel wie im Test: r = 15 cm → U = 2·π·15 ≈ <b>94.25 cm</b>. Die grüne Linie unten ist der «abgewickelte» Umfang:</p>',
+  viz:2, quiz:{q:'r = 5 cm → U = ? (2 Dez., cm)', ans:31.42}},
+ {t:'Fläche A',
+  html:'<p class="mut"><b>Fläche A</b> = der Inhalt des Kreises:</p><div class="formula">A = π·r²<small>Radius quadriert – nicht der Durchmesser!</small></div><p class="mut">Falls d gegeben: zuerst r = d/2. Einheiten: cm², m². Beispiel: r = 15 → A = π·225 ≈ <b>706.86 cm²</b>. Das gelbe Quadrat im Kreis zeigt r²:</p>',
+  viz:3, quiz:{q:'r = 4 cm → A = ? (2 Dez., cm²)', ans:50.27}},
+ {t:'Umkehraufgaben: r oder d gesucht',
+  html:'<p class="mut">Oft sind U oder A gegeben und r/d gesucht – Formeln umstellen:</p><div class="formula">d = U / π &nbsp;&nbsp; r = U / (2π)<small>wenn der Umfang gegeben ist</small></div><div class="formula">r = √(A / π) &nbsp;&nbsp; d = 2·r<small>wenn die Fläche gegeben ist</small></div><p class="mut">«Aus U die A» (oder umgekehrt)? Zuerst r bestimmen, dann in die andere Formel einsetzen. Gib unten beliebiges U oder A ein:</p>',
+  viz:4, quiz:{q:'U = 62.83 cm → r = ? (cm) – Kontrolle: 2·π·r muss 62.83 ergeben', ans:10}},
+ {t:'Kreissektor: Bogenlänge b und Sektorfläche',
+  html:'<p class="mut">Ein Sektor ist ein «Pizzastück» mit Winkel α (Zentriwinkel). Bogenlänge b und Sektorfläche sind der Anteil <b>α/360</b> vom ganzen Kreis:</p><div class="formula">b = (α/360)·2·π·r</div><div class="formula">A<sub>Sektor</sub> = (α/360)·π·r²</div><p class="mut">α = 90° → Viertelkreis, α = 360° → voller Kreis. Teste es mit den Slidern:</p>',
+  viz:5, quiz:{q:'α = 90°, r = 2 cm → b = ? (2 Dez., cm)', ans:3.14}},
+ {t:'Textaufgaben & zusammengesetzte Figuren',
+  html:'<div class="formula">Kreis im Quadrat (Seite s) eingeschrieben → d = s</div><div class="formula">Runden laufen: Strecke = Anzahl Runden · U</div><div class="formula">Zusammengesetzte Figur: in Kreise / Halbkreise / Sektoren zerlegen → Teilflächen addieren oder subtrahieren</div><p class="mut">⚠️ Umfang einer Figur = nur die <b>dick/markiert gezeichneten</b> Randlinien und Bögen, innere Linien zählen nicht! Beim Rundenlaufen immer U, nie A.</p>',
+  viz:6, quiz:{q:'Quadrat s = 10 cm, eingeschriebener Kreis → A = ? (2 Dez., cm²)', ans:78.54}},
+ {t:'Sektor-Tabelle: fehlende Grösse',
+  html:'<p class="mut">In Tabellen (wie im Vortest) fehlen oft zwei Grössen von r, α, b, A<sub>S</sub>. Merke den Shortcut:</p><div class="formula">A<sub>Sektor</sub> = ½ · b · r</div><div class="formula">α = (b / (2πr)) · 360 &nbsp;&nbsp; r = (b · 360) / (2π·α)</div><p class="mut">Und falls α fehlt, aber A<sub>S</sub> gegeben ist: α = (A<sub>S</sub>/(πr²))·360, b = 2·A<sub>S</sub>/r. Live-Rechner unten:</p>',
+  viz:7, quiz:{q:'r = 10 cm, b = 15.7 cm → α = ? (Grad)', ans:90}},
+ {t:'Fläche im Quadrat (Figur wie im Vortest)',
+  html:'<p class="mut">Die Figur: Quadrat (Seite 3) mit Viertelkreis (r = 2, Ecke D, weiss), Halbkreis-Ausbuchtungen links (r = 0.5) und unten (r = 1.5), weisser Halbkreis rechts (r = 1) und Dreiviertelkreis bei C (r = 1). Strategie:</p><div class="formula">A = Quadrat − Viertel(r=2) − Halb(r=1) + Halb(r=0.5) + Halb(r=1.5) + ¾·Kreis(r=1)</div><div class="formula">U = nur Bögen: ½·2π·0.5 + ¼·2π·2 + ¾·2π·1 + ½·2π·1 + ½·2π·1.5 = 5.5π</div><p class="mut">Rechnung: A = 9 − π − 0.5π + 0.125π + 1.125π + 0.75π = 9 + 0.5π ≈ <b>10.57</b>, U = 5.5π ≈ <b>17.28</b>. Keine einzige gerade Strecke im Umfang!</p>',
+  viz:8, quiz:{q:'Figur oben (Quadratseite 3): Fläche A = ? (2 Dez., cm²)', ans:10.57}},
+ {t:'Pizzastück mit Biss (Sektorring)',
+  html:'<p class="mut">Pizza in n Stücke → jedes Stück ist ein Sektor mit α = 360/n. Biss t cm von der Spitze weg → Rest ist ein <b>Sektorring</b>:</p><div class="formula">A = (α/360)·π·(R² − t²)</div><div class="formula">U = 2·(R − t) + (α/360)·2π·(R + t)</div><p class="mut">Beispiel: d = 28 (R = 14), 8 Stücke (α = 45°), Biss 5 cm → A = ⅛·π·(196−25) ≈ <b>67.15 cm²</b>. Achtung: (R² − t²), nicht (R − t)²!</p>',
+  viz:9, quiz:{q:'Pizza d = 28, 8 Stücke, Biss 5 cm → A = ? (2 Dez., cm²)', ans:67.15}}
+];
+/* ---------- SVG-Helfer ---------- */
+function arcPts(cx,cy,r,a1,a2,n){ const out=[]; for(let i=0;i<=n;i++){ const a=(a1+(a2-a1)*i/n)*PI/180; out.push([cx+r*Math.cos(a), cy+r*Math.sin(a)]); } return out; }
+function pathFrom(arcs,sc,ox,oy){ let pts=[]; arcs.forEach((ar,idx)=>{ const p=arcPts(ar[0],ar[1],ar[2],ar[3],ar[4],40); if(idx>0) p=p.slice(1); pts=pts.concat(p); }); return 'M '+pts.map(p=>(ox+p[0]*sc).toFixed(1)+' '+(oy-p[1]*sc).toFixed(1)).join(' L ')+' Z'; }
+function vizHTML(n){
+  if(n===1) return '<div class="viz"><svg id="vSvg" viewBox="0 0 340 240"></svg><div class="vctl"><input type="range" id="vR" min="2" max="10" step="0.5" value="6"><div class="vout" id="vOut"></div></div></div>';
+  if(n===2) return '<div class="viz"><svg id="vSvg" viewBox="0 0 340 280"></svg><div class="vctl"><input type="range" id="vR" min="2" max="10" step="0.5" value="6"><div class="vout" id="vOut"></div></div></div>';
+  if(n===3) return '<div class="viz"><svg id="vSvg" viewBox="0 0 340 240"></svg><div class="vctl"><input type="range" id="vR" min="2" max="10" step="0.5" value="6"><div class="vout" id="vOut"></div></div></div>';
+  if(n===4) return '<div class="viz"><div class="vctl"><label class="mut">U =</label> <input type="number" id="vU" placeholder="z.B. 94.25" step="any"><br><br><label class="mut">A =</label> <input type="number" id="vA" placeholder="z.B. 706.86" step="any"><div class="vout" id="vOut"></div></div></div>';
+  if(n===5) return '<div class="viz"><svg id="vSvg" viewBox="0 0 340 260"></svg><div class="vctl"><label class="mut">α = <span id="vAlabel">138</span>°</label><input type="range" id="vA" min="10" max="360" step="5" value="138"><br><label class="mut">r = <span id="vRlabel">6</span> cm</label><input type="range" id="vR" min="2" max="8" step="0.5" value="6"><div class="vout" id="vOut"></div></div></div>';
+  if(n===6) return '<div class="viz"><svg viewBox="0 0 200 200"><rect x="40" y="40" width="120" height="120" fill="none" stroke="#818cf8" stroke-width="3"/><circle cx="100" cy="100" r="60" fill="rgba(94,234,212,.12)" stroke="#5eead4" stroke-width="3"/><text x="100" y="30" fill="#9aa6d4" font-size="14" text-anchor="middle">s</text></svg><svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="70" fill="none" stroke="#5eead4" stroke-width="3"/><circle cx="100" cy="100" r="50" fill="none" stroke="#2a3356" stroke-width="2" stroke-dasharray="6 6"/><circle cx="100" cy="100" r="30" fill="none" stroke="#2a3356" stroke-width="2" stroke-dasharray="6 6"/><text x="100" y="108" font-size="26" text-anchor="middle">🏃</text><text x="100" y="192" fill="#9aa6d4" font-size="13" text-anchor="middle">n Runden = n · U</text></svg></div>';
+  if(n===7) return '<div class="viz"><svg id="vSvg" viewBox="0 0 340 260"></svg><div class="vctl"><label class="mut">r = <span id="vRlabel">10</span> cm</label><input type="range" id="vR" min="2" max="20" step="0.5" value="10"><br><label class="mut">α = <span id="vAlabel">90</span>°</label><input type="range" id="vA" min="10" max="360" step="5" value="90"><div class="vout" id="vOut"></div></div></div>';
+  if(n===8) return '<div class="viz"><svg id="vSvg" viewBox="0 0 400 380"></svg><div class="vctl"><div class="vout" id="vOut"></div></div></div>';
+  return '<div class="viz"><svg id="vSvg" viewBox="0 0 360 250"></svg><div class="vctl"><label class="mut">d =</label> <input type="number" id="vD" value="28" step="any"><br><br><label class="mut">Stücke n =</label> <select id="vN"><option>4</option><option>6</option><option selected>8</option></select><br><br><label class="mut">Biss t =</label> <input type="number" id="vT" value="5" step="any"><div class="vout" id="vOut"></div></div></div>';
+}
+function bindViz(n){
+  const svg=$('#vSvg'), out=$('#vOut');
+  if(n===1||n===2||n===3){
+    const sl=$('#vR');
+    const draw=()=>{ const r=+sl.value, sc=11, cx=170, cy=120, R=r*sc;
+      let s='<circle cx="'+cx+'" cy="'+cy+'" r="'+R+'" fill="rgba(94,234,212,.10)" stroke="#5eead4" stroke-width="3"/>';
+      const ax=cx+R*Math.cos(0.7), ay=cy-R*Math.sin(0.7);
+      s+='<line x1="'+cx+'" y1="'+cy+'" x2="'+ax+'" y2="'+ay+'" stroke="#fbbf24" stroke-width="3"/><text x="'+((cx+ax)/2+8)+'" y="'+((cy+ay)/2-6)+'" fill="#fbbf24" font-size="15" font-weight="800">r</text>';
+      s+='<line x1="'+(cx-R)+'" y1="'+cy+'" x2="'+(cx+R)+'" y2="'+cy+'" stroke="#818cf8" stroke-width="2" stroke-dasharray="6 5"/><text x="'+cx+'" y="'+(cy+18)+'" fill="#818cf8" font-size="15" font-weight="800" text-anchor="middle">d</text>';
+      s+='<circle cx="'+cx+'" cy="'+cy+'" r="3" fill="#e9edff"/>';
+      if(n===2){ const U=2*PI*r; s+='<line x1="20" y1="255" x2="'+(20+U*2.2)+'" y2="255" stroke="#34d399" stroke-width="6" stroke-linecap="round"/><text x="20" y="245" fill="#34d399" font-size="14" font-weight="800">U (abgewickelt)</text>'; }
+      if(n===3){ s+='<rect x="'+cx+'" y="'+cy+'" width="'+R+'" height="'+R+'" fill="rgba(251,191,36,.18)" stroke="#fbbf24" stroke-width="2"/><text x="'+(cx+R/2)+'" y="'+(cy+R/2+5)+'" fill="#fbbf24" font-size="14" font-weight="800" text-anchor="middle">r²</text>'; }
+      svg.innerHTML=s;
+      if(n===1) out.innerHTML='r = '+fmt(r)+' cm → d = 2r = <b>'+fmt(2*r)+' cm</b>';
+      if(n===2) out.innerHTML='U = 2·π·r = 2·π·'+fmt(r)+' = <b>'+fmt(2*PI*r)+' cm</b><br>(oder U = π·d = π·'+fmt(2*r)+')';
+      if(n===3) out.innerHTML='A = π·r² = π·'+fmt(r)+'² = <b>'+fmt(PI*r*r)+' cm²</b>';
+    };
+    sl.addEventListener('input',draw); draw();
+  }
+  if(n===4){
+    const u=$('#vU'), a=$('#vA');
+    const calc=()=>{ let t='';
+      const uv=parseFloat(u.value);
+      if(!isNaN(uv)&&uv>0){ t+='Aus U: r = U/(2π) = <b>'+fmt(uv/(2*PI))+'</b>, d = U/π = <b>'+fmt(uv/PI)+'</b><br>'; }
+      const av=parseFloat(a.value);
+      if(!isNaN(av)&&av>0){ const r=Math.sqrt(av/PI); t+='Aus A: r = √(A/π) = <b>'+fmt(r)+'</b>, d = <b>'+fmt(2*r)+'</b>'; }
+      out.innerHTML=t||'<span class="mut">gib U oder A ein…</span>';
+    };
+    u.addEventListener('input',calc); a.addEventListener('input',calc); calc();
+  }
+  if(n===5||n===7){
+    const sa=$('#vA'), sr=$('#vR');
+    const draw=()=>{ const a=+sa.value, r=+sr.value, cx=170, cy=140, R=r*(n===7?10:15);
+      $('#vAlabel').textContent=a; $('#vRlabel').textContent=fmt(r);
+      const rad=a*PI/180, x=cx+R*Math.cos(rad), y=cy-R*Math.sin(rad), large=a>180?1:0;
+      let s='<circle cx="'+cx+'" cy="'+cy+'" r="'+R+'" fill="none" stroke="#2a3356" stroke-width="2" stroke-dasharray="5 6"/>';
+      s+='<path d="M '+cx+' '+cy+' L '+(cx+R)+' '+cy+' A '+R+' '+R+' 0 '+large+' 0 '+x+' '+y+' Z" fill="rgba(129,140,248,.25)" stroke="#818cf8" stroke-width="2"/>';
+      s+='<path d="M '+(cx+R)+' '+cy+' A '+R+' '+R+' 0 '+large+' 0 '+x+' '+y+'" fill="none" stroke="#5eead4" stroke-width="6" stroke-linecap="round"/>';
+      const mrad=(a/2)*PI/180;
+      s+='<text x="'+(cx+(R+16)*Math.cos(mrad))+'" y="'+(cy-(R+16)*Math.sin(mrad)+5)+'" fill="#5eead4" font-size="15" font-weight="800" text-anchor="middle">b</text>';
+      s+='<text x="'+(cx+34)+'" y="'+(cy-10)+'" fill="#fbbf24" font-size="14" font-weight="800">α</text>';
+      svg.innerHTML=s;
+      const b=a/360*2*PI*r, As=a/360*PI*r*r;
+      out.innerHTML='b = (α/360)·2πr = <b>'+fmt(b)+' cm</b><br>A<sub>Sektor</sub> = (α/360)·πr² = <b>'+fmt(As)+' cm²</b>'+(n===7?'<br>Check: ½·b·r = <b>'+fmt(0.5*b*r)+' cm²</b> ✓':'');
+    };
+    sa.addEventListener('input',draw); sr.addEventListener('input',draw); draw();
+  }
+  if(n===8){
+    const sc=55, ox=80, oy=260;
+    const arcs=[[0,0.5,0.5,-90,-270],[0,3,2,270,360],[3,3,1,180,-90],[3,1,1,90,270],[1.5,0,1.5,0,-180]];
+    let s='<path d="'+pathFrom(arcs,sc,ox,oy)+'" fill="rgba(94,234,212,.30)" stroke="#5eead4" stroke-width="3"/>';
+    s+='<rect x="'+ox+'" y="'+(oy-3*sc)+'" width="'+(3*sc)+'" height="'+(3*sc)+'" fill="none" stroke="#818cf8" stroke-width="2"/>';
+    s+='<text x="'+(ox-14)+'" y="'+(oy-3*sc+5)+'" fill="#e9edff" font-size="14" font-weight="800">D</text>';
+    s+='<text x="'+(ox+3*sc+8)+'" y="'+(oy-3*sc+5)+'" fill="#e9edff" font-size="14" font-weight="800">C</text>';
+    s+='<text x="'+(ox-14)+'" y="'+(oy+5)+'" fill="#e9edff" font-size="14" font-weight="800">A</text>';
+    s+='<text x="'+(ox+3*sc+8)+'" y="'+(oy+5)+'" fill="#e9edff" font-size="14" font-weight="800">B</text>';
+    s+='<text x="'+(ox-26)+'" y="'+(oy-2*sc+5)+'" fill="#9aa6d4" font-size="13">2</text>';
+    s+='<text x="'+(ox-26)+'" y="'+(oy-0.5*sc+5)+'" fill="#9aa6d4" font-size="13">1</text>';
+    s+='<text x="'+(ox+3*sc+12)+'" y="'+(oy-1*sc+5)+'" fill="#9aa6d4" font-size="13">2</text>';
+    s+='<text x="'+(ox+1.5*sc)+'" y="'+(oy+1.5*sc+22)+'" fill="#9aa6d4" font-size="13" text-anchor="middle">3</text>';
+    svg.innerHTML=s;
+    out.innerHTML='Zerlegung (Seite 3):<br>A = 9 − π − 0.5π + 0.125π + 1.125π + 0.75π = <b>10.57 cm²</b><br>U = 0.5π + π + 1.5π + π + 1.5π = 5.5π = <b>17.28 cm</b>';
+  }
+  if(n===9){
+    const dI=$('#vD'), nS=$('#vN'), tI=$('#vT');
+    const draw=()=>{ const d=parseFloat(dI.value)||28, nn=+nS.value, t=Math.min(parseFloat(tI.value)||5, d/2-1);
+      const R=d/2, a=360/nn, sc=Math.min(7, 150/R);
+      const cx=70, cy=200;
+      const pts=arcPts(0,0,R,0,a,40).concat(arcPts(0,0,t,a,0,40).slice(1));
+      const path='M '+pts.map(p=>(cx+p[0]*sc).toFixed(1)+' '+(cy-p[1]*sc).toFixed(1)).join(' L ')+' Z';
+      let s='<path d="'+path+'" fill="rgba(251,191,36,.25)" stroke="#fbbf24" stroke-width="3"/>';
+      const mr=(a/2)*PI/180;
+      s+='<line x1="'+cx+'" y1="'+cy+'" x2="'+(cx+R*sc*Math.cos(mr))+'" y2="'+(cy-R*sc*Math.sin(mr))+'" stroke="#818cf8" stroke-width="2" stroke-dasharray="5 5"/><text x="'+(cx+R*sc*0.6*Math.cos(mr)+6)+'" y="'+(cy-R*sc*0.6*Math.sin(mr))+'" fill="#818cf8" font-size="14" font-weight="800">R</text>';
+      s+='<text x="'+(cx+t*sc*Math.cos(mr)-14)+'" y="'+(cy-t*sc*Math.sin(mr)+4)+'" fill="#f87171" font-size="14" font-weight="800">t</text>';
+      s+='<circle cx="'+cx+'" cy="'+cy+'" r="3" fill="#e9edff"/>';
+      svg.innerHTML=s;
+      const A=a/360*PI*(R*R-t*t), U=2*(R-t)+a/360*2*PI*(R+t);
+      out.innerHTML='α = 360/'+nn+' = <b>'+fmt(a)+'°</b><br>A = (α/360)·π·(R²−t²) = <b>'+fmt(A)+' cm²</b><br>U = 2·(R−t) + (α/360)·2π·(R+t) = <b>'+fmt(U)+' cm</b>';
+    };
+    dI.addEventListener('input',draw); nS.addEventListener('change',draw); tI.addEventListener('input',draw); draw();
+  }
+}
+/* ---------- Lektionen ---------- */
+function renderLearn(){
+  const L=LESSONS[S.lesson];
+  let dots=LESSONS.map((l,i)=>'<span class="dot '+(S.mastered[i]?'done ':'')+(i===S.lesson?'cur':'')+'" data-i="'+i+'" title="Lektion '+(i+1)+'"></span>').join('');
+  $('#view-learn').innerHTML=
+   '<div class="banner">⏰ <b>Test morgen?</b> Plan: 9 Lektionen (~15 Min) → 10 Aufgaben im Trainer → Mini-Test. Alle Formeln & TR-Tasten im 📌 Spickzettel.</div>'+
+   '<div class="card"><h2>Lektion '+(S.lesson+1)+'/'+LESSONS.length+': '+L.t+'</h2><div class="dots">'+dots+'</div>'+
+   '<div style="margin-top:12px">'+L.html+'</div>'+ vizHTML(L.viz)+
+   '<div style="background:var(--card2); border:1px solid var(--line); border-radius:14px; padding:16px; margin-top:16px"><h3 style="margin-top:0">🎯 Mini-Check: '+L.quiz.q+'</h3><div class="fields"><input class="ans" id="quizIn" placeholder="?"><button class="btn" id="quizBtn">Prüfen</button></div><div id="quizFb"></div></div>'+
+   '<div class="lnav"><button class="btn ghost" id="prevL" '+(S.lesson===0?'disabled':'')+'>← Zurück</button><span class="mut">'+Object.keys(S.mastered).length+' / '+LESSONS.length+' Lektionen gemeistert</span><button class="btn ghost" id="nextL" '+(S.lesson===LESSONS.length-1?'disabled':'')+'>Weiter →</button></div>'+
+   '</div>';
+  bindViz(L.viz);
+  $$('#view-learn .dot').forEach(d=>d.addEventListener('click',()=>{S.lesson=+d.dataset.i; renderLearn();}));
+  $('#prevL').addEventListener('click',()=>{ if(S.lesson>0){S.lesson--; renderLearn();} });
+  $('#nextL').addEventListener('click',()=>{ if(S.lesson<LESSONS.length-1){S.lesson++; renderLearn();} });
+  $('#quizBtn').addEventListener('click',()=>{
+    const inp=$('#quizIn'), fb=$('#quizFb');
+    if(isOk(inp.value,L.quiz.ans)){ inp.classList.add('ok'); S.mastered[S.lesson]=true; bumpXP(10); S.streak++; refreshStats();
+      fb.innerHTML='<div class="okbox">✅ Richtig! +10 XP. Lektion gemeistert – drücke «Weiter».</div>';
+      $$('#view-learn .dot').forEach((d,i)=>{ if(S.mastered[i]) d.classList.add('done'); });
+    } else { inp.classList.add('bad'); S.streak=0; refreshStats(); setTimeout(()=>inp.classList.remove('bad'),400);
+      fb.innerHTML='<div class="badbox">❌ Leider nein. Setze die Formel aus der Lektion ein und rechne mit dem TR (π-Taste!).</div>'; }
+  });
+}
+/* ---------- Aufgabenkarte ---------- */
+function probCard(p,opts){
+  return '<div class="card"><div class="ptitle">'+p.text+'</div>'+
+   '<div class="given">'+p.given+'</div>'+
+   '<div class="fields">'+p.fields.map(f=>'<label class="field">'+f.label+' <input class="ans" data-f="'+f.id+'" placeholder="?"> <span class="unit">'+f.unit+'</span></label>').join('')+'</div>'+
+   '<div class="pbtns"><button class="btn" id="pCheck">Prüfen</button>'+
+   (opts.allowSol?'<button class="btn ghost" id="pSol">Lösung zeigen</button>':'')+
+   '<button class="btn ghost" id="pNext">'+(opts.testMode?'Nächste Frage →':'Neue Aufgabe →')+'</button></div>'+
+   '<div id="pFb"></div><div id="pSteps" class="steps hidden"></div></div>';
+}
+function bindProb(p,opts){
+  let revealed=false, done=false, checkedOnce=false;
+  const inputs=$$('#probWrap .ans');
+  const checkBtn=$('#pCheck');
+  function showSteps(){ const el=$('#pSteps'); el.classList.remove('hidden');
+    el.innerHTML='<b>Lösung:</b><ol>'+p.steps.map(s=>'<li>'+s+'</li>').join('')+'</ol><div class="tibox">🧮 Rechner: '+p.ti+'</div>'; }
+  function doCheck(){
+    if(done) return;
+    const firstTry=!checkedOnce; checkedOnce=true; S.checks++;
+    let allOk=true;
+    inputs.forEach(inp=>{ const f=p.fields.find(x=>x.id===inp.dataset.f);
+      const good=isOk(inp.value,f.ans); inp.classList.add(good?'ok':'bad'); if(!good) allOk=false; });
+    const fb=$('#pFb');
+    if(allOk){
+      done=true; S.solved++; inputs.forEach(i=>i.disabled=true); checkBtn.disabled=true;
+      let xpMsg='';
+      if(!revealed){ if(firstTry){ S.firstOk++; bumpXP(10); xpMsg='+10 XP'; } else { bumpXP(5); xpMsg='+5 XP'; } }
+      S.streak++; refreshStats();
+      fb.innerHTML='<div class="okbox">✅ Richtig! '+xpMsg+'</div>';
+      showSteps(); if(opts.onDone) opts.onDone(true);
+    } else {
+      S.streak=0; refreshStats();
+      if(opts.testMode){
+        done=true; inputs.forEach(i=>i.disabled=true); checkBtn.disabled=true;
+        fb.innerHTML='<div class="badbox">❌ Richtige Antworten: '+p.fields.map(f=>f.label.replace(/<[^>]+>/g,'')+' <b>'+fmt(f.ans)+'</b> '+f.unit).join(', ')+'</div>';
+        showSteps(); if(opts.onDone) opts.onDone(false);
+      } else {
+        fb.innerHTML='<div class="badbox">❌ Fehler. Checke: richtige Formel? richtige Einheiten? auf 2 Dezimalen gerundet? (Komma oder Punkt egal)</div>';
+      }
+    }
+  }
+  checkBtn.addEventListener('click',doCheck);
+  inputs.forEach(i=>i.addEventListener('keydown',e=>{ if(e.key==='Enter') doCheck(); }));
+  if(opts.allowSol) $('#pSol').addEventListener('click',()=>{ revealed=true; showSteps(); $('#pFb').innerHTML='<div class="warnbox">👀 Lösung gezeigt – für diese Aufgabe gibt es keine XP mehr, aber präge dir jeden Schritt ein!</div>'; });
+  $('#pNext').addEventListener('click',()=>{ if(opts.onNext) opts.onNext(); });
+}
+/* ---------- Trainer ---------- */
+function newTrainProblem(){
+  const p=pick(GENS)();
+  $('#probWrap').innerHTML=probCard(p,{allowSol:true});
+  bindProb(p,{allowSol:true,onNext:newTrainProblem});
+}
+function renderTrain(){
+  $('#view-train').innerHTML='<div class="card"><h2>🏋️ Trainer</h2><p class="mut">Aufgaben wie im Dossier Kreis & Vortest (Aufgaben 1–10): U und A, Umkehraufgaben, Sektor, Sektor-Tabelle, Runden laufen, eingeschriebener Kreis, Figur im Quadrat, Pizzastück. Rechnen → prüfen → Lösung mit Rechner-Tasten anschauen. Komma oder Punkt egal: <b>94,25</b> = 94.25.</p></div><div id="probWrap"></div>';
+  newTrainProblem();
+}
+/* ---------- Mini-Test ---------- */
+let T={qs:[],i:0,ok:0,start:0,timer:null,results:[]};
+function renderTest(){
+  $('#view-test').innerHTML='<div class="card"><h2>📝 Mini-Test (wie morgen)</h2><p class="mut">10 Fragen · 12 Minuten · <b>ein Versuch</b> pro Frage · keine Tipps. Am Schluss: Auswertung mit Note (CH) und Lösungsübersicht.</p><br><button class="btn" id="tStart">🚀 Test starten</button></div>';
+  $('#tStart').addEventListener('click',startTest);
+}
+function startTest(){
+  T={qs:shuffle(GENS).map(g=>g()),i:0,ok:0,start:Date.now(),timer:null,results:[]};
+  $('#view-test').innerHTML='<div class="card" style="display:flex; justify-content:space-between; align-items:center"><b>Frage <span id="tNum">1</span>/10</b><span class="timer" id="tTime">12:00</span></div><div id="probWrap"></div>';
+  T.timer=setInterval(tick,1000); tick(); showQ();
+}
+function tick(){
+  const left=12*60-Math.floor((Date.now()-T.start)/1000);
+  const el=$('#tTime'); if(!el){ clearInterval(T.timer); return; }
+  if(left<=0){ clearInterval(T.timer); finishTest(); return; }
+  el.textContent=Math.floor(left/60)+':'+String(left%60).padStart(2,'0');
+  if(left<60) el.style.color='var(--bad)';
+}
+function showQ(){
+  const p=T.qs[T.i];
+  $('#tNum').textContent=T.i+1;
+  $('#probWrap').innerHTML=probCard(p,{testMode:true});
+  bindProb(p,{testMode:true,onDone:ok=>{ T.results.push({p:p,ok:ok}); if(ok) T.ok++; },onNext:()=>{ if(T.i<9){ T.i++; showQ(); } else { clearInterval(T.timer); finishTest(); } }});
+}
+function finishTest(){
+  clearInterval(T.timer);
+  const pct=Math.round(10*T.ok);
+  const msg= pct>=90?'🎉 Top! Du bist bereit für den Test!': pct>=70?'💪 Solide! Noch etwas Übung und es gibt eine 6.': pct>=50?'🙂 Okay, aber wiederhole die Formeln in 📚 Theorie und 📌 Spickzettel.':'📚 Dringend: Theorie + Trainer durchgehen und Mini-Test wiederholen!';
+  const grade= pct>=90?6: pct>=75?5: pct>=60?4.5: pct>=50?4:3;
+  $('#view-test').innerHTML='<div class="card"><h2>Resultat: '+T.ok+'/10 ('+pct+'%)</h2><div class="formula" style="font-size:26px; text-align:center">Note (CH): '+grade+'</div><p class="mut" style="margin-top:8px">'+msg+'</p>'+
+   '<h3>Lösungsübersicht:</h3><ul class="review">'+T.results.map(r=>'<li>'+(r.ok?'✅':'❌')+' <b>'+r.p.given+'</b> → '+r.p.fields.map(f=>f.label.replace(/<[^>]+>/g,'')+' '+fmt(f.ans)+' '+f.unit).join(', ')+'</li>').join('')+'</ul>'+
+   '<div class="pbtns"><button class="btn" id="tAgain">🔁 Nochmals</button><button class="btn ghost" id="tTrain">🏋️ Zum Trainer</button></div></div>';
+  $('#tAgain').addEventListener('click',renderTest);
+  $('#tTrain').addEventListener('click',()=>switchView('train'));
+}
+/* ---------- Spickzettel ---------- */
+function renderCheat(){
+  $('#view-cheat').innerHTML=
+  '<div class="grid">'+
+   '<div class="card"><h3 style="margin-top:0">🔑 Alle Formeln</h3><div class="formula">U = 2πr = πd</div><div class="formula">A = πr²</div><div class="formula">d = 2r</div><div class="formula">r = U/(2π), d = U/π</div><div class="formula">r = √(A/π)</div><div class="formula">b = (α/360)·2πr</div><div class="formula">A<sub>Sektor</sub> = (α/360)·πr² = ½·b·r</div><div class="formula">α = (b/(2πr))·360</div><div class="formula">eingeschrieben im Quadrat: d = s</div><div class="formula">Runden: Strecke = n·U</div><div class="formula">Sektorring: A = (α/360)·π·(R²−t²)</div></div>'+
+   '<div class="card"><h3 style="margin-top:0">📖 Fachbegriffe</h3><table><tr><th>Begriff</th><th>Bedeutung</th></tr>'+
+    [['Umfang (U)','Länge des Kreisrandes'],['Fläche (A)','Inhalt des Kreises'],['Radius (r)','Abstand M bis zum Rand'],['Durchmesser (d)','d = 2r, durch den ganzen Kreis'],['Mittelpunkt (M)','Zentrum des Kreises'],['Kreissektor','«Pizzastück»'],['Bogenlänge (b)','Länge des Sektorbogens'],['Zentriwinkel (α)','Winkel des Sektors'],['eingeschrieben','passt genau hinein (berührt Seiten)'],['Runde','einmal um den Kreis herum'],['Strecke','zurückgelegter Weg']].map(r=>'<tr><td>'+r[0]+'</td><td>'+r[1]+'</td></tr>').join('')+'</table></div>'+
+   '<div class="card"><h3 style="margin-top:0">🧮 Taschenrechner TI</h3><p class="mut" style="line-height:2">• <b>π</b>: Taste mit π-Symbol (TI-30X IIS / TI-84: <kbd>2nd</kbd>+<kbd>^</kbd>; TI-30X Pro / Multiview: eigene <kbd>π</kbd>-Taste)<br>• <b>Quadrat</b>: <kbd>x²</kbd><br>• <b>Wurzel √</b>: <kbd>2nd</kbd>+<kbd>x²</kbd> (IIS) bzw. <kbd>√</kbd> (Pro)<br>• Division durch π immer in Klammern: <kbd>÷</kbd><kbd>(</kbd> … <kbd>)</kbd></p><div class="tibox">Beispiel U (r=15): <kbd>2</kbd><kbd>×</kbd><kbd>π</kbd><kbd>×</kbd><kbd>15</kbd><kbd>=</kbd> → 94.2477… ≈ <b>94.25</b><br>Beispiel r aus A=2682: <kbd>2nd</kbd><kbd>x²</kbd><kbd>(</kbd><kbd>2682</kbd><kbd>÷</kbd><kbd>π</kbd><kbd>)</kbd><kbd>=</kbd> → 29.24…<br>π nie selbst auf 3.14 runden – erst das Endergebnis runden (meist 2 Dezimalen).</div></div>'+
+   '<div class="card"><h3 style="margin-top:0">⚠️ Nicht reinfallen</h3><p class="mut" style="line-height:1.9">1) d gegeben? Zuerst r = d/2 (oder direkt U = πd).<br>2) Fläche immer <b>cm² / m²</b>, Länge cm / m.<br>3) Sektor: Faktor <b>α/360</b> nicht vergessen.<br>4) Umfang zusammengesetzter Figuren = nur markierte Ränder (Bögen!), keine inneren Linien.<br>5) Runden laufen: Strecke = Runden × <b>U</b>, nicht A.<br>6) Sektorring: A = Anteil · π · (R² − t²), nicht (R − t)²!<br>7) Runden: meist 2 Dezimalen wie in den Aufgaben.</p></div>'+
+  '</div>';
+}
+/* ---------- Navigation ---------- */
+function switchView(v){
+  ['learn','train','test','cheat'].forEach(x=>{ $('#view-'+x).classList.toggle('hidden',x!==v); });
+  $$('.tab').forEach(t=>t.classList.toggle('active',t.dataset.v===v));
+  if(v==='learn') renderLearn();
+  if(v==='train') renderTrain();
+  if(v==='test') renderTest();
+  if(v==='cheat') renderCheat();
+}
+$$('.tab').forEach(t=>t.addEventListener('click',()=>switchView(t.dataset.v)));
+refreshStats();
+renderLearn();
+</script>
+</body>
+</html>
